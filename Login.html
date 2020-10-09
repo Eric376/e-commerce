@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(function(){
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                $("#header").load("HeaderLoggedIn.html");
+            }
+            else
+            {
+                $("#header").load("header.html");
+            }
+            $("#footer").load("footer.html");
+        });
+    </script>
+
+</head>
+<body>
+
+<div id="header"></div>
+
+<p style="text-align: center">Thank you for coming back!</p>
+<div class="signUp" style="margin-left: 43.5%; padding: 10px">
+    <strong>Sign Up:</strong>
+    <p>Account ID:&emsp;&emsp;&nbsp; <input type="text" id="accountID" value=""><br></p>
+    <p>Password:&emsp;&emsp;&emsp;<input type="text" id="password" value=""><br></p>
+    <button style="margin-left: 10%;" onclick="login()">Submit</button>
+</div>
+
+<div id="footer"></div>
+
+<script>
+    function login()
+    {
+        var token;
+        var URL_base = "http://localhost:8080/";
+        var XHR = new XMLHttpRequest();
+        XHR.open("GET", URL_base + "account/login?id="+ document.getElementById("accountID").value +"&password=" + document.getElementById("password").value, true);
+        XHR.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                token = this.responseText;
+                var XHR2 = new XMLHttpRequest();
+                XHR2.open("GET", URL_base + "account/get?token="+ token + "&id=" + document.getElementById("accountID").value, true)
+                XHR2.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var id = this.responseText;
+                        var obj = JSON.parse(id);
+                        history.pushState(null, '', '?token='+token);
+                        localStorage.setItem("token", token);
+                        localStorage.setItem("accountID", document.getElementById("accountID").value);
+                        $("#header").load("headerLoggedIn.html");
+                        document.getElementById("accountID").value = "";
+                        document.getElementById("password").value = "";
+                    }
+                };
+                XHR2.send();
+            }
+        };
+        XHR.send();
+    }
+</script>
+</body>
+</html>

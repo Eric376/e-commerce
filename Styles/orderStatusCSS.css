@@ -1,0 +1,82 @@
+.grid-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.accountNav{
+    color: #ffffff;
+    list-style: none;
+    text-align: right;
+    font-weight: bold;
+    padding: 20px 0 20px 0;
+}
+
+.accountNav > li {
+    display: inline-block;
+    padding: 0 25px 0 25px;
+}
+
+.accountNav > li > a {
+    text-decoration: none;
+    color: black;
+}
+
+.accountNav > li > a:hover {
+    color: #c1c1c1;
+}
+
+.nav{
+    background-color: #ab131b;
+    color: #ffffff;
+    list-style: none;
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+    padding: 20px 0 20px 0;
+}
+
+.nav > li {
+    display: inline-block;
+    padding: 0 25px 0 25px;
+}
+
+.nav > li > a {
+    text-decoration: none;
+    color: black;
+}
+
+.nav > li > a:hover {
+    color: #c1c1c1;
+}
+
+#outer {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#inner_fixed {
+    height: 100px;
+    background-color: #008764;
+}
+
+#inner_remaining {
+    background-color: #ab131b;
+}
+
+#oven{
+    filter: grayscale(100%);
+}
+
+#prep{
+    filter: grayscale(100%);
+}
+
+#boxing {
+    filter: grayscale(100%);
+}
+
+#delivery {
+    filter: grayscale(100%);
+}

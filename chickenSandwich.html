@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chicken Sandwich</title>
+    <link rel="stylesheet" href="Styles\foodCSS.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="Scripts\reviewLoad.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(function(){
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                $("#header").load("HeaderLoggedIn.html");
+                var URL_base = "http://localhost:8080/";
+                var XHR = new XMLHttpRequest();
+                XHR.open("GET", URL_base + "account/get?token="+ localStorage.getItem("token") + "&id=" + localStorage.getItem("accountID"), true)
+                XHR.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var id = this.responseText;
+                        var obj = JSON.parse(id);
+                        document.getElementById("reviewUsername").value = obj.username;
+                    }
+                };
+                XHR.send();
+            }
+            else
+            {
+                $("#header").load("header.html");
+            }
+            $("#footer").load("footer.html");
+            var name = "chickensandwich";
+            reviewLoad(name);
+        });
+    </script>
+</head>
+<body>
+<div id="header"></div>
+
+<section class="foodDisplay">
+    <div class="clearfix">
+        <img style="float: left; width: 35%; height: 35%; padding: 10px;" src="Images\chickenSandwich.jpg" alt="Chicken Sandwich">
+        <div style="float: right; margin-top: 50px; margin-right: 20px; padding-right: 25px;">
+            <br>
+            <strong style="font-size: 32px;">Chicken Sandwich</strong>
+            <p>Our hormone-free chicken is sourced from family-owned local farms. The chicken comes grilled and topped with fresh lettuce, tomato,</p>
+            <p>and honey-glazed bacon. Served with a side of sweet potato fries, a hard boiled egg, and a small salad topped with oil and vinegar. Our</p>
+            <p>chicken sandwich is a local favorite and the House's top pick.</p>
+            <br>
+
+            <div style="margin-top: 50px;">
+                <strong style="font-size: 24px">Quantity:</strong>
+                <br><br>
+                <input style="text-align: center;" type="text" id="orderQuantity" value="1" autofocus>
+                <br><br>
+                <button onclick="addToCart()">Add To Cart</button>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    function addToCart()
+    {
+        var orderUpdate = JSON.parse(localStorage.getItem("order"));
+        orderUpdate.chickenSandwich = document.getElementById("orderQuantity").value;
+        localStorage.setItem("order", JSON.stringify(orderUpdate));
+        alert("Cart Updated");
+        location.reload();
+    }
+</script>
+
+<div style="padding: 0 10px">
+    <p>Name: <input id="reviewUsername" type="text" value="Anonymous"><button onclick="submitReview(document.getElementById('reviewUsername').value, document.getElementById('reviewText').value, 'chickensandwich')">Submit Review</button></p>
+    <div class="rate" style="display: inline-block">
+        <input class="radioButton" type="radio" id="star5" value="5" />
+        <label for="star5" title="text">5 stars</label>
+        <input class="radioButton" type="radio" id="star4" value="4" />
+        <label for="star4" title="text">4 stars</label>
+        <input class="radioButton" type="radio" id="star3" value="3" />
+        <label for="star3" title="text">3 stars</label>
+        <input class="radioButton" type="radio" id="star2" value="2" />
+        <label for="star2" title="text">2 stars</label>
+        <input class="radioButton" type="radio" id="star1" value="1" />
+        <label for="star1" title="text">1 star</label>
+    </div>
+    <br>
+    <textarea id="reviewText" rows="4" cols="120" type="text" placeholder="Enter text here..."></textarea>
+</div>
+
+<div id="chickensandwich" style="padding: 0px 10px">
+    <h2>Reviews:</h2>
+</div>
+
+<div id="footer"></div>
+</body>
+</html>

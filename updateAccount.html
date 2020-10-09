@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Account</title>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(function(){
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                $("#header").load("HeaderLoggedIn.html");
+            }
+            else
+            {
+                $("#header").load("header.html");
+            }
+            $("#footer").load("footer.html");
+            var XHR = new XMLHttpRequest();
+            var URL_base = "http://localhost:8080/";
+            XHR.open("GET", URL_base + "account/get?token="+ localStorage.getItem("token") + "&id=" + localStorage.getItem("accountID"), true)
+            XHR.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var id = this.responseText;
+                    var obj = JSON.parse(id);
+                    document.getElementById("username").value = obj.username;
+                    document.getElementById("firstName").value = obj.firstName;
+                    document.getElementById("lastName").value = obj.lastName;
+                    document.getElementById("email").value = obj.email;
+                    document.getElementById("address").value = obj.address;
+                    document.getElementById("phoneNumber").value = obj.phoneNumber;
+                    document.getElementById("password").value = obj.password;
+                }
+            };
+            XHR.send();
+        });
+    </script>
+</head>
+<body>
+<div id="header"></div>
+
+<p style="text-align: center">Thank you for being a loyal customer!</p>
+<div class="updateAccount" style="margin-left: 43.5%; padding: 10px">
+    <strong>Update Account:</strong>
+    <p>Username:&emsp;&emsp;&nbsp; <input type="text" id="username" value=""><br></p>
+    <p>First Name:&emsp;&emsp; <input type="text" id="firstName" value=""><br></p>
+    <p>Last Name:&emsp;&emsp;&nbsp;<input type="text" id="lastName" value=""><br></p>
+    <p>Email:&emsp;&emsp;&emsp;&emsp;&emsp;<input type="text" id="email" value=""><br></p>
+    <p>Address:&emsp;&emsp;&emsp;&ensp;&nbsp;<input type="text" id="address" value=""><br></p>
+    <p>Phone Number:&nbsp;<input type="text" id="phoneNumber" value=""><br></p>
+    <p>Password:&emsp;&emsp;&emsp;<input type="text" id="password" value=""><br></p>
+    <button style="margin-left: 10%;" onclick="createAccount()">Submit</button>
+</div>
+
+<div id="footer"></div>
+
+<script>
+    function createAccount()
+    {
+        var URL_base = "http://localhost:8080/";
+        localStorage.setItem("orderID", "0");
+        var orderPlaceholder = {
+            chickenSandwich: 0,
+            beefSandwich: 0,
+            turkeySandwich: 0,
+            veggieSandwich: 0,
+            roastPork: 0,
+            pizza: 0,
+            fries: 0,
+            iceCream: 0,
+            drink: 0,
+            noodle: 0,
+            cardNumber: "0000-0000-0000-0000",
+            expDate: "00/00",
+            CVV: 0,
+            username: document.getElementById("username").value
+        };
+        localStorage.setItem("order", JSON.stringify(orderPlaceholder));
+
+
+        var XHR = new XMLHttpRequest();
+        XHR.open("POST", URL_base + "account/create");
+        XHR.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        var account = {
+            username: document.getElementById("username").value,
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            email: document.getElementById("email").value,
+            address: document.getElementById("address").value,
+            phoneNumber: document.getElementById("phoneNumber").value,
+            password: document.getElementById("password").value,
+            authorization: false
+        }
+        XHR.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var id = this.responseText;
+                alert("Returned ID: " + id);
+            }
+        };
+        XHR.send(JSON.stringify(account));
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="Styles\CheckoutCSS.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(function(){
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                $("#header").load("HeaderLoggedIn.html");
+                var URL_base = "http://localhost:8080/";
+                var XHR = new XMLHttpRequest();
+                XHR.open("GET", URL_base + "account/get?token="+ localStorage.getItem("token") + "&id=" + localStorage.getItem("accountID"), true)
+                XHR.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var id = this.responseText;
+                        var obj = JSON.parse(id);
+                        document.getElementById("firstName").value = obj.firstName;
+                        document.getElementById("lastName").value = obj.lastName;
+                        document.getElementById("email").value = obj.email;
+                        document.getElementById("address").value = obj.address;
+                    }
+                };
+                XHR.send();
+            }
+            else
+            {
+                //$("#header").load("header.html");
+                alert("You must be signed in to place an order.");
+                window.location.href = "Home.html";
+            }
+            $("#footer").load("footer.html");
+
+            var order = JSON.parse(localStorage.getItem("order"));
+            document.getElementById("chickenSandwich").value = order.chickenSandwich;
+            document.getElementById("beefSandwich").value = order.beefSandwich;
+            document.getElementById("turkeySandwich").value = order.turkeySandwich;
+            document.getElementById("veggieSandwich").value = order.veggieSandwich;
+            document.getElementById("roastPork").value = order.roastPork;
+            document.getElementById("pizza").value = order.pizza;
+            document.getElementById("noodle").value = order.noodle;
+            document.getElementById("fries").value = order.fries;
+            document.getElementById("drink").value = order.drink;
+            document.getElementById("iceCream").value = order.iceCream;
+            var price = Number(order.chickenSandwich)*2.25 + Number(order.beefSandwich)*2.50 + Number(order.turkeySandwich)*3.15 + Number(order.veggieSandwich)*3.50 + Number(order.roastPork)*3.15 + Number(order.pizza)*3.50
+                + Number(order.noodle)*4.25 + Number(order.fries)*2.15 + Number(order.drink)*1.50 + Number(order.iceCream)*2.15;
+            var quantity = Number(order.chickenSandwich) + Number(order.beefSandwich) + Number(order.turkeySandwich) + Number(order.veggieSandwich) + Number(order.roastPork) + Number(order.pizza)
+                + Number(order.noodle) + Number(order.fries) + Number(order.drink) + Number(order.iceCream);
+            document.getElementById("priceDisplay").innerText = "$" + price.toFixed(2);
+            document.getElementById("quantity").innerText = " " + quantity.toString();
+        });
+    </script>
+</head>
+<body>
+
+<div id="header"></div>
+
+<div class="row">
+    <div class="col-75">
+        <div class="container">
+            <form action="/action_page.php">
+
+                <div class="row">
+                    <div class="col-50">
+                        <h3>Billing Address</h3>
+                        <label for="firstName"><i class="fa fa-user"></i> First Name</label>
+                        <input type="text" id="firstName" placeholder="John">
+                        <label for="lastName"><i class="fa fa-user"></i> Last Name</label>
+                        <input type="text" id="lastName" placeholder="Doe">
+                        <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                        <input type="text" id="email" placeholder="john@example.com">
+                        <label for="address"><i class="fa fa-address-card-o"></i> Address</label>
+                        <input type="text" id="address" placeholder="542 W. 15th Street Pittsburgh PA, 15102">
+                    </div>
+
+                    <div class="col-50">
+                        <h3>Payment</h3>
+                        <label for="firstName">Accepted Cards</label>
+                        <div class="icon-container">
+                            <i class="fa fa-cc-visa" style="color:navy;"></i>
+                            <i class="fa fa-cc-amex" style="color:blue;"></i>
+                            <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                            <i class="fa fa-cc-discover" style="color:orange;"></i>
+                        </div>
+                        <label for="cardNumber">Credit card number</label>
+                        <input type="text" id="cardNumber" placeholder="1111-2222-3333-4444">
+                        <label for="expDate">Exp Date</label>
+                        <input type="text" id="expDate" placeholder="08/20">
+                        <div class="row">
+                            <div class="col-50">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="352">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <label>
+                    <input type="checkbox" checked="checked"> Shipping address same as billing
+                </label>
+                <input onclick="checkout()" value="Complete Checkout" class="btn">
+            </form>
+        </div>
+    </div>
+    <div class="col-25">
+        <div class="container">
+            <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i><b id="quantity">0</b></span></h4>
+            <p>Chicken Sandwich: $2.25<input class="productBox" type="text" id="chickenSandwich" value=""><br></p>
+            <p>Beef Sandwich: $2.50<input class="productBox" type="text" id="beefSandwich" value=""><br></p>
+            <p>Turkey Sandwich: $3.15<input class="productBox" type="text" id="turkeySandwich" value=""><br></p>
+            <p>Veggie Sandwich: $3.50<input class="productBox" type="text" id="veggieSandwich" value=""><br></p>
+            <p>Roast Pork: $3.15<input class="productBox" type="text" id="roastPork" value=""><br></p>
+            <p>Pizza: $3.50<input class="productBox" type="text" id="pizza" value=""><br></p>
+            <p>Noodle: $4.25<input class="productBox" type="text" id="noodle" value=""><br></p>
+            <p>Fries: $2.15<input class="productBox" type="text" id="fries" value=""><br></p>
+            <p>Drink: $1.50<input class="productBox" type="text" id="drink" value=""><br></p>
+            <p>Ice Cream: $2.15<input class="productBox" type="text" id="iceCream" value=""><br></p>
+            <hr>
+            <button onclick="updateQuantity()">Update</button><p>Total <span class="price" style="color:black"><b id="priceDisplay">$30</b></span></p>
+        </div>
+    </div>
+    <script>
+        function updateQuantity()
+        {
+            var orderUpdate = updateOrderLocal()
+            localStorage.setItem("order", JSON.stringify(orderUpdate));
+            alert("Cart Updated");
+            location.reload();
+        }
+
+        function checkout()
+        {
+            var order = updateOrderLocal();
+            order.cardNumber = document.getElementById("cardNumber").value;
+            order.expDate = document.getElementById("expDate").value;
+            order.CVV = Number(document.getElementById("cvv").value);
+            localStorage.setItem("orderTrack", JSON.stringify(order));
+            var orderPlaceholder = {
+                chickenSandwich: 0,
+                beefSandwich: 0,
+                turkeySandwich: 0,
+                veggieSandwich: 0,
+                roastPork: 0,
+                pizza: 0,
+                fries: 0,
+                iceCream: 0,
+                drink: 0,
+                noodle: 0,
+                cardNumber: "0000-0000-0000-0000",
+                expDate: "00/00",
+                CVV: 0,
+                username: "Guest User"
+            };
+
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                var URL_base = "http://localhost:8080/";
+                var XHR = new XMLHttpRequest();
+                XHR.open("GET", URL_base + "account/get?token="+ localStorage.getItem("token") + "&id=" + localStorage.getItem("accountID"), true)
+                XHR.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var id = this.responseText;
+                        var obj = JSON.parse(id);
+                        order.username = obj.username;
+                        orderPlaceholder.username = obj.username;
+                    }
+                };
+                XHR.send();
+            }
+            else
+            {
+                order.username = "Guest Account";
+            }
+
+            var XHR2 = new XMLHttpRequest();
+            XHR2.open("POST", URL_base + "order/createOrder?token=" + localStorage.getItem("token"));
+            XHR2.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            XHR2.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var id = this.responseText;
+                    localStorage.setItem("orderID", id);
+                }
+            };
+            XHR2.send(JSON.stringify(order));
+            localStorage.setItem("order", JSON.stringify(orderPlaceholder));
+            startTracking(localStorage.getItem("orderID"));
+            alert("Order has been place!");
+            location.reload();
+        }
+
+        function startTracking(orderID)
+        {
+            if (orderID == 0)
+            {
+                orderID++;
+                localStorage.setItem("orderID", orderID);
+            }
+            var tracking =
+                {
+                    id: orderID,
+                    status: 0,
+                }
+
+            var URL_base = "http://localhost:8080/";
+            var XHR = new XMLHttpRequest();
+            XHR.open("POST", URL_base + "tracking/createTracking?token=" + localStorage.getItem("token") + "&orderID=" + orderID);
+            XHR.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            XHR.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var id = this.responseText;
+                }
+            };
+            XHR.send(JSON.stringify(tracking));
+
+        }
+
+        function updateOrderLocal()
+        {
+            var orderUpdate = JSON.parse(localStorage.getItem("order"));
+            orderUpdate.chickenSandwich = Number(document.getElementById("chickenSandwich").value);
+            orderUpdate.beefSandwich = Number(document.getElementById("beefSandwich").value);
+            orderUpdate.turkeySandwich = Number(document.getElementById("turkeySandwich").value);
+            orderUpdate.veggieSandwich = Number(document.getElementById("veggieSandwich").value);
+            orderUpdate.roastPork = Number(document.getElementById("roastPork").value);
+            orderUpdate.pizza = Number(document.getElementById("pizza").value);
+            orderUpdate.noodle = Number(document.getElementById("noodle").value);
+            orderUpdate.fries = Number(document.getElementById("fries").value);
+            orderUpdate.drink = Number(document.getElementById("drink").value);
+            orderUpdate.iceCream = Number(document.getElementById("iceCream").value);
+            return orderUpdate
+        }
+    </script>
+</div>
+
+<div id="footer"></div>
+
+</body>
+</html>

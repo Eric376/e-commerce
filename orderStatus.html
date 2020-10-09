@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Status</title>
+    <link rel="stylesheet" type="text/css" href="Styles\orderStatusCSS.css">
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(function(){
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                $("#header").load("HeaderLoggedIn.html");
+                var URL_base = "http://localhost:8080/";
+                var XHR = new XMLHttpRequest();
+                var orderID = localStorage.getItem("orderID");
+                XHR.open("GET", URL_base + "tracking/getTracking?token="+ localStorage.getItem("token") + "&orderID=" + orderID, true);
+                XHR.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var id = this.responseText;
+                        try {
+                            var obj = JSON.parse(id);
+                        }
+                        catch(err) {
+                            alert("No order found.");
+                            noOrder();
+                        }
+                        if(obj.id == "0")
+                        {
+                            noOrder();
+                        }
+                        else if(obj.status == "0"){
+                            changeImage(0);
+                        }
+                        else if(obj.status == "1"){
+                            changeImage(1);
+                        }
+                        else if(obj.status == "2"){
+                            changeImage(2);
+                        }
+                        else if(obj.status == "3"){
+                            changeImage(3);
+                        }
+                        else if(Number(obj.status) >= 4)
+                        {
+                            changeImage(4);
+                        }
+
+                        obj.status++;
+                        var XHR2 = new XMLHttpRequest();
+                        XHR2.open("PUT", URL_base + "tracking/updateTracking?token="+ localStorage.getItem("token") + "&orderID=" + orderID, true);
+                        XHR2.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        XHR2.onreadystatechange = function()
+                        {
+                            var id = this.responseText;
+                            //alert(JSON.parse(id));
+                        }
+                        XHR2.send(JSON.stringify(obj));
+                    }
+                };
+                XHR.send();
+            }
+            else
+            {
+                //$("#header").load("header.html");
+                alert("You must be signed in to place an order.");
+                window.location.href = "Home.html";
+            }
+            $("#footer").load("footer.html");
+        });
+    </script>
+
+</head>
+<body>
+<div id="header"></div>
+<br>
+<div class="grid-container">
+    <div class="grid-item"><img src="Images/prep0.jpg" height="200" width="200" id="prep" onclick="changeImage(0)"></div>
+    <div class="grid-item"><img src="Images/oven0.jpg" height="200" width="200" id="oven" onclick="changeImage(1)"></div>
+    <div class="grid-item"><img src="Images/boxing0.jpg" height="200" width="200" id="boxing" onclick="changeImage(2)"></div>
+    <div class="grid-item"><img src="Images/delivery0.jpg" height="200" width="200" id="delivery" onclick="changeImage(3)"></div>
+</div>
+
+<script src="Scripts\orderTrackingScript.js" defer></script>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h1 align="center" id="process">Your food is being prepped!</h1>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+<div id="footer"></div>
+
+</body>
+</html>
+
+
+
+
+

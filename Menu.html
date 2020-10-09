@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="Styles/MenuOrder.css" type="text/css">
+    <title>Menu</title>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(function(){
+            var id = window.location.href;
+            id = id.substring(id.lastIndexOf('?')+1);
+            if(id == "login=true")
+            {
+                $("#header").load("HeaderLoggedIn.html");
+            }
+            else
+            {
+                $("#header").load("header.html");
+            }
+            $("#footer").load("footer.html");
+        });
+    </script>
+</head>
+<body>
+<div id="header"></div>
+
+<div>
+    <button id="placeOrder0" class="button" onclick="placeOrder()">Place Order</button>
+    <section id="chicken">
+        <img style="display: inline-block" src="Images/chickenSandwich.jpg" alt="Chicken Sandwich" width="200" height="200" style="margin-right: 20px" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Chicken Sandwich</p>
+            $2.25
+            <button class="button" onclick="updateQuantity('chickenSandwichQuantity')">ADD</button>
+        </div>
+        <p id="chickenSQ">Quantity: <input class="inputQuantity" style="text-align: center;" type="text" id="chickenSandwichQuantity" value="0"></p>
+    </section>
+
+    <section id="beef">
+        <img style="display: inline-block" src="Images/beefSandwich.jpg" alt="Beef Sandwich" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Beef Sandwich</p>
+            $2.50
+            <button class="button" onclick="updateQuantity('beefSandwichQuantity')">ADD</button>
+        </div>
+        <p id="beefSQ">Quantity: <input style="text-align: center;" type="text" id="beefSandwichQuantity" value="0"></p>
+    </section>
+
+    <section id="turkey">
+        <img style="display: inline-block" src="Images/turkeySandwich.jpg" alt="Turkey Sandwich" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Turkey Sandwich</p>
+            $3.15
+            <button class="button" onclick="updateQuantity('turkeySandwichQuantity')">ADD</button>
+        </div>
+        <p id="turkeySQ">Quantity: <input style="text-align: center;" type="text" id="turkeySandwichQuantity" value="0"></p>
+    </section>
+
+    <section id="veggie">
+        <img style="display: inline-block" src="Images/veggieSandwich.jpg" alt="Veggie Sandwich" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Vegetable Sandwich</p>
+            $3.50
+            <button class="button" onclick="updateQuantity('veggieSandwichQuantity')">ADD</button>
+        </div>
+        <p id="vegeSQ">Quantity: <input style="text-align: center;" type="text" id="veggieSandwichQuantity" value="0"></p>
+    </section>
+
+    <section id="roast">
+        <img style="display: inline-block" src="Images/roastPork.jpg" alt="Roast Pork" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Roast Pork</p>
+            $3.15
+            <button class="button" onclick="updateQuantity('roastPorkQuantity')">ADD</button>
+        </div>
+        <p id="roastQ">Quantity: <input style="text-align: center;" type="text" id="roastPorkQuantity" value="0"></p>
+    </section>
+
+    <section id="noodles">
+        <img style="display: inline-block" src="Images/noodlesPic.jpg" alt="Noodles" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Noodles</p>
+            $4.25
+            <button class="button" onclick="updateQuantity('noodleQuantity')">ADD</button>
+        </div>
+        <p id="noodleQ">Quantity: <input style="text-align: center;" type="text" id="noodleQuantity" value="0"></p>
+    </section>
+
+    <section id="pizza">
+        <img style="display: inline-block" src="Images/pizzaPic.jpg" alt="Pizza" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Pizza</p>
+            $3.50
+            <button class="button" onclick="updateQuantity('pizzaQuantity')">ADD</button>
+        </div>
+        <p id="pizzaQ">Quantity: <input style="text-align: center;" type="text" id="pizzaQuantity" value="0"></p>
+    </section>
+
+    <section id="fries">
+        <img style="display: inline-block" src="Images/frenchFries.jpg" alt="Fries" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Fries</p>
+            $2.15
+            <button class="button" onclick="updateQuantity('friesQuantity')">ADD</button>
+        </div>
+        <p id="friesQ">Quantity: <input style="text-align: center;" type="text" id="friesQuantity" value="0"></p>
+    </section>
+
+    <section id="ice">
+        <img style="display: inline-block" src="Images/iceCream.jpg" alt="Ice Cream" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Ice Cream</p>
+            $2.15
+            <button class="button" onclick="updateQuantity('iceCreamQuantity')">ADD</button>
+        </div>
+        <p id="iceQ">Quantity: <input style="text-align: center;" type="text" id="iceCreamQuantity" value="0"></p>
+    </section>
+
+    <section id="drinks">
+        <img style="display: inline-block" src="Images/drinksPic.jpg" alt="Drinks" width="200" height="200" >
+        <div style="float: right; padding: 100px 0">
+            <p style="display: inline-block;">Drinks</p>
+            $1.50
+            <button class="button"onclick="updateQuantity('drinksQuantity')">ADD</button>
+        </div>
+        <p id="drinkQ">Quantity: <input style="text-align: center;" type="text" id="drinksQuantity" value="0"></p>
+    </section>
+    <br>
+    <button id="placeOrder1" class="button" onclick="placeOrder()">Place Order</button>
+</div>
+<div id="footer"></div>
+<script>
+
+    function updateQuantity(stringID)
+    {
+        document.getElementById(stringID).value = Number(document.getElementById(stringID).value)+1;
+    }
+
+    function placeOrder() {
+        var orderUpdate = JSON.parse(localStorage.getItem("order"));
+        orderUpdate.chickenSandwich = Number(document.getElementById("chickenSandwichQuantity").value) + Number(orderUpdate.chickenSandwich);
+        orderUpdate.beefSandwich = Number(document.getElementById("beefSandwichQuantity").value) + Number(orderUpdate.beefSandwich);
+        orderUpdate.turkeySandwich = Number(document.getElementById("turkeySandwichQuantity").value) + Number(orderUpdate.turkeySandwich);
+        orderUpdate.veggieSandwich = Number(document.getElementById("veggieSandwichQuantity").value) + Number(orderUpdate.veggieSandwich);
+        orderUpdate.roastPork = Number(document.getElementById("roastPorkQuantity").value) + Number(orderUpdate.roastPork);
+        orderUpdate.noodle = Number(document.getElementById("noodleQuantity").value) + Number(orderUpdate.noodle);
+        orderUpdate.pizza = Number(document.getElementById("pizzaQuantity").value) + Number(orderUpdate.pizza);
+        orderUpdate.fries = Number(document.getElementById("friesQuantity").value) + Number(orderUpdate.fries);
+        orderUpdate.iceCream = Number(document.getElementById("iceCreamQuantity").value) + Number(orderUpdate.iceCream);
+        orderUpdate.drink = Number(document.getElementById("drinksQuantity").value) + Number(orderUpdate.drink);
+        localStorage.setItem("order", JSON.stringify(orderUpdate));
+        location.reload();
+        alert("Order sent to checkout.");
+    }
+
+
+</script>
+</body>
+</html></html>
+
